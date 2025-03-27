@@ -27,7 +27,7 @@ import requests
 form_url = "https://docs.google.com/forms/d/e/your_form_id/formResponse"
 
 form_data = {
-    "entry.XXXXXXXX": "Sandesh (request)",  # make this ish whatever you want, but it has to be WORD FOR WORD BAR FOR BAR the answer
+    "entry.XXXXXXXX": "ANSWER",  # make this ish whatever you want, but it has to be WORD FOR WORD BAR FOR BAR the answer
 }
 
 
