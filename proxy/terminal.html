@@ -57,210 +57,265 @@
     <input type="password" id="passwordInput" placeholder="[INPUT]">
   </div>
 
-  <script>
+<script>
+function proxy(url="https://snoopthethird.oops.wtf/"){
+    document.write("Welcome, chump")
+    let iframe = document.createElement("iframe");
+    iframe.src = url;
+    iframe.style.position = "absolute";
+    iframe.style.top = "0";
+    iframe.style.left = "0";
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+}
 
-    function proxy(url="https://snoopthethird.oops.wtf/"){
+const terminal = document.getElementById("terminal");
+const commandLine = document.getElementById("commandLine");
+const commandInput = document.getElementById("commandInput");
+const passwordLine = document.getElementById("passwordLine");
+const passwordInput = document.getElementById("passwordInput");
 
+const bootLines = [
+  "<span class='cyan'>Welcome to the λ terminal.</span>",
+  "Type <span class='green'>help</span> for a list of commands"
+];
 
-        document.write("Welcome, chump")
-        let iframe = document.createElement("iframe");
-        iframe.src = url;
-        iframe.style.position = "absolute";
-        iframe.style.top = "0";
-        iframe.style.left = "0";
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.border = "none";
-        document.body.appendChild(iframe);
+let lineIndex = 0;
+
+function typeLine(line, callback) {
+  let container = document.createElement("div");
+  terminal.appendChild(container);
+
+  let i = 0;
+  function typing() {
+    if (i < line.length) {
+      container.innerHTML = line.slice(0, i+1);
+      i++;
+      setTimeout(typing, 15);
+    } else {
+      container.innerHTML = line;
+      callback();
     }
+  }
+  typing();
+}
 
-    const terminal = document.getElementById("terminal");
-    const commandLine = document.getElementById("commandLine");
-    const commandInput = document.getElementById("commandInput");
-    const passwordLine = document.getElementById("passwordLine");
-    const passwordInput = document.getElementById("passwordInput");
+function typeNextLine() {
+  if (lineIndex < bootLines.length) {
+    typeLine(bootLines[lineIndex], () => {
+      lineIndex++;
+      setTimeout(typeNextLine, 300);
+    });
+  } else {
+    commandLine.classList.remove("hidden");
+    commandInput.focus();
+  }
+}
 
-    const bootLines = [
-      "<span class='cyan'>Welcome to the λ terminal.</span>",
-      "Type <span class='green'>help</span> for a list of commands"
-    ];
+typeNextLine();
 
-    let lineIndex = 0;
+// Command history
+let history = [];
+let historyIndex = -1;
 
-    function typeLine(line, callback) {
-      let container = document.createElement("div");
-      terminal.appendChild(container);
+// --------- NEW: Helper to print clean output ----------
+function printOutput(text) {
+  let container = document.createElement("div");
+  container.innerHTML = text;
+  terminal.appendChild(container);
+  terminal.scrollTop = terminal.scrollHeight;
+  return container;
+}
 
-      let i = 0;
-      function typing() {
-        if (i < line.length) {
-          container.innerHTML = line.slice(0, i+1);
-          i++;
-          setTimeout(typing, 15);
-        } else {
-          container.innerHTML = line;
-          callback();
-        }
-      }
-      typing();
-    }
+// Command Handler
+function runCommand(input) {
+  const parts = input.split(" ");
+  const command = parts[0].toLowerCase();
+  const args = parts.slice(1).join(" ").trim();
 
-    function typeNextLine() {
-      if (lineIndex < bootLines.length) {
-        typeLine(bootLines[lineIndex], () => {
-          lineIndex++;
-          setTimeout(typeNextLine, 300);
-        });
+  switch (command) {
+    case "help":
+      printOutput(
+        "AVAILABLE COMMANDS<br>--<br>" +
+        "<span class='green'>proxy</span><br>" +
+        "<span class='green'>log </span>&lt;text&gt;<br>" +
+        "<span class='green'>location </span>&lt;URL&gt;<br>" +
+        "<span class='green'>cls</span><br>" +
+        "<span class='green'>echo </span>&lt;text&gt;<br>" +
+        "<span class='green'>eval </span>&lt;js&gt;<br>" +
+        "<span class='green'>ver</span><br>" +
+        "<span class='green'>date</span><br>" +
+        "<span class='green'>exit</span><br>--"
+      );
+      break;
+
+    case "location":
+      if (!args) {
+        printOutput("Command is missing an argument");
       } else {
-        commandLine.classList.remove("hidden");
-        commandInput.focus();
-      }
-    }
-
-    typeNextLine();
-
-    // Command history
-    let history = [];
-    let historyIndex = -1;
-
-    // Command Handler
-    function runCommand(input) {
-      const parts = input.split(" ");
-      const command = parts[0].toLowerCase();
-      const args = parts.slice(1).join(" ").trim();
-      let container = document.createElement("div");
-
-      switch (command) {
-        case "help":
-          container.innerHTML =
-            "AVAILABLE COMMANDS<br>--<br>" +
-            "<span class='green'>proxy</span><br>" +
-            "<span class='green'>log &lt;text&gt;</span><br>" +
-            "<span class='green'>title &lt;text&gt;</span><br>" +
-            "<span class='green'>cls</span><br>" +
-            "<span class='green'>echo &lt;text&gt;</span><br>" +
-            "<span class='green'>ver</span><br>" +
-            "<span class='green'>date</span><br>" +
-            "<span class='green'>exit</span><br>--";
+        try {
+          new URL(args);
+        } catch (e) {
+          printOutput("Invalid URL: " + args);
           break;
-
-        case "log":
-        case "echo":
-          container.innerHTML = args
-            ? args
-            : "Command is missing an argument";
-          break;
-
-        case "title":
-          if (!args) {
-            container.innerHTML = "Command is missing an argument";
-          } else {
-            document.title = args;
-            container.innerHTML = "Title set to: " + args;
-          }
-          break;
-
-        case "cls":
-          terminal.innerHTML = "";
-          return; // nothing else, don't append
-
-        case "ver":
-          container.innerHTML = "λ Terminal v1.0.0 (W.W Build 0)";
-          break;
-
-        case "date":
-          container.innerHTML = new Date().toString();
-          break;
-
-        case "exit":
-          container.innerHTML = "Exiting session...";
-          setTimeout(() => location.reload(), 800);
-          break;
-
-        case "proxy":
-          if (!args) {
-            // no argument → normal secure mode
-            container.innerHTML = "Activating Iframe Proxy Access Protocol... <br>If you know what you're doing, you can use the alternative syntax (proxy [URL]) to iframe tunnel to another source.";
-            commandLine.classList.add("hidden");
-            passwordLine.classList.remove("hidden");
-            passwordInput.focus();
-          } else {
-                try{
-                new URL(args);
-                } catch (e) {
-                container.innerHTML = "Invalid URL: " + args;
-                break
-            }
-
-            // argument given → direct proxy
-            proxy(args); // args is already a string with the whole URL
-            container.innerHTML = "Launching proxy to:" + args;
-          }
-          break;
-
-
-
-            
-          
-
-        case "":
-          return; // do nothing on empty enter
-
-        default:
-          container.innerHTML = input + ": command not found";
-      }
-
-      terminal.appendChild(container);
-      terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    commandInput.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        const input = commandInput.value.trim();
-        runCommand(input);
-        if (input) {
-          history.push(input);
-          historyIndex = history.length; // reset index to latest
         }
-        commandInput.value = "";
-      } else if (e.key === "ArrowUp") {
-        if (historyIndex > 0) {
-          historyIndex--;
-          commandInput.value = history[historyIndex];
-        }
-        e.preventDefault();
-      } else if (e.key === "ArrowDown") {
-        if (historyIndex < history.length - 1) {
-          historyIndex++;
-          commandInput.value = history[historyIndex];
-        } else {
-          historyIndex = history.length;
-          commandInput.value = "";
-        }
-        e.preventDefault();
+        printOutput("Changing page location to: " + args);
+        setTimeout(() => window.location = args, 800);
       }
-    });
+      break;
 
-    // Handle password
-    passwordInput.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        let container = document.createElement("div");
-        if (passwordInput.value === "goonsquad9000") {
-          container.innerHTML = "[<span class='green'>ACCESS GRANTED</span>]";
+    case "echo":
+      printOutput(args ? args : "Command is missing an argument");
+      break;
+
+    case "title":
+      if (!args) {
+        printOutput("Command is missing an argument");
+      } else {
+        document.title = args;
+        printOutput("Title set to: " + args);
+      }
+      break;
+
+    case "cls":
+      terminal.innerHTML = "";
+      return; // nothing else, don't append
+
+    case "ver":
+      printOutput("λ Terminal v1.0.0 (W.W Build 0)");
+      break;
+
+    case "date":
+      printOutput(new Date().toString());
+      break;
+
+    case "exit":
+      printOutput("Exiting session...");
+      setTimeout(() => window.close(), 800);
+      break;
+
+    case "eval":
+      if (!args) {
+        printOutput("Command is missing an argument");
+      } else {
+        let consoleOutput = [];
+        const originalConsoleLog = console.log;
+
+        // Override console.log temporarily
+        console.log = function(...msgs) {
+          consoleOutput.push(msgs.join(" "));
+          originalConsoleLog.apply(console, msgs);
+        };
+
+        try {
+          const result = eval(args); // actual code evaluation
+          const returnCode = (result === undefined) ? "Undefined" : result.toString();
+          const output = consoleOutput.length ? consoleOutput.join(" ") : "(no console output)";
+
+          // Create container div
+          let container = document.createElement("div");
+          container.innerHTML = `
+            <span style="display:inline-block; width:150px;"><strong>Output</strong></span> | ${output}<br>
+            <span style="display:inline-block; width:150px;"><strong>Return Code</strong></span> | ${returnCode}
+          `;
           terminal.appendChild(container);
-          passwordLine.classList.add("hidden");
-          commandLine.classList.remove("hidden");
-          commandInput.focus();
-          setTimeout(() => proxy(), 1000);
-        } else {
-          container.innerHTML = "[<span class='red'>ACCESS DENIED</span>]";
+          terminal.scrollTop = terminal.scrollHeight;
+
+        } catch (err) {
+          let container = document.createElement("div");
+          container.innerHTML = `
+            <span style="display:inline-block; width:150px;"><strong>Output</strong></span> | Error: ${err.message}<br>
+            <span style="display:inline-block; width:150px;"><strong>Return Code</strong></span> | Failed
+          `;
           terminal.appendChild(container);
-          setTimeout(() => location.reload(), 1000);
+          terminal.scrollTop = terminal.scrollHeight;
+        } finally {
+          // Restore original console.log
+          console.log = originalConsoleLog;
         }
-        passwordInput.value = "";
-        terminal.scrollTop = terminal.scrollHeight;
       }
-    });
-  </script>
+      break;
+
+
+
+    case "proxy":
+      if (!args) {
+        // no argument → normal secure mode
+        printOutput(
+          "Activating Iframe Proxy Access Protocol... <br>If you know what you're doing, you can use the alternative syntax (proxy [URL]) to iframe tunnel to another source."
+        );
+        commandLine.classList.add("hidden");
+        passwordLine.classList.remove("hidden");
+        passwordInput.focus();
+      } else {
+        try {
+          new URL(args);
+        } catch (e) {
+          printOutput("Invalid URL: " + args);
+          break;
+        }
+
+        // argument given → direct proxy
+        proxy(args); 
+        printOutput("Launching proxy to: " + args);
+      }
+      break;
+
+    case "":
+      return; // do nothing on empty enter
+
+    default:
+      printOutput(input + ": command not found");
+  }
+}
+
+commandInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    const input = commandInput.value.trim();
+    runCommand(input);
+    if (input) {
+      history.push(input);
+      historyIndex = history.length; // reset index to latest
+    }
+    commandInput.value = "";
+  } else if (e.key === "ArrowUp") {
+    if (historyIndex > 0) {
+      historyIndex--;
+      commandInput.value = history[historyIndex];
+    }
+    e.preventDefault();
+  } else if (e.key === "ArrowDown") {
+    if (historyIndex < history.length - 1) {
+      historyIndex++;
+      commandInput.value = history[historyIndex];
+    } else {
+      historyIndex = history.length;
+      commandInput.value = "";
+    }
+    e.preventDefault();
+  }
+});
+
+// Handle password
+passwordInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    if (passwordInput.value === "goonsquad9000") {
+      printOutput("[<span class='green'>ACCESS GRANTED</span>]");
+      passwordLine.classList.add("hidden");
+      commandLine.classList.remove("hidden");
+      commandInput.focus();
+      setTimeout(() => proxy(), 1000);
+    } else {
+      printOutput("[<span class='red'>ACCESS DENIED</span>]");
+      setTimeout(() => location.reload(), 1000);
+    }
+    passwordInput.value = "";
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+});
+</script>
+
 </body>
 </html>
