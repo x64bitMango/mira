@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="https://www.desmos.com/assets/img/apps/graphing/favicon.ico">
+  <title>Desmos | Graphing Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+  background-image: radial-gradient(black 1px, transparent 1px);
+  background-size: 10px 10px; /* manga halftone dots */
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* Simpler manga-like panel styling */
+.panel {
+  background: #fff;
+  border: 2px solid black;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.title-panel {
+  text-align: center;
+}
+
+.title-panel h1 {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #333;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.link-btn {
+  background: white;
+  border: 2px solid black;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  background: #f2f2f2;
+}
+
+/* Neighbor boxes */
+.neighbor-boxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.neighbor-box {
+  display: block;
+  text-align: center;
+  background: white;
+  border: 2px solid black;
+  padding: 0.5rem;
+  color: black;
+  text-decoration: none;
+}
+
+.neighbor-box:hover {
+  background: #f2f2f2;
+}
+
+/* Manga panel image box */
+.manga-img {
+  text-align: center;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-style: italic;
+  padding: 0;
+}
+
+
+
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Left Column -->
+    <aside class="sidebar">
+      <div class="panel">
+        <h2 id="clock"></h2>
+      </div>
+      <div class="panel">
+        <h2>Calendar</h2>
+        <div id="calendar"></div>
+      </div>
+      <img src="https://i.redd.it/ominyni3q0re1.jpeg" class="panel manga-img" height="235" width="268"" alt="osaka">
+      <div class="panel links">
+        <p>I don't host the proxies</p>
+        <p>I don't own the proxies</p>
+        <p>I did not create the proxies</p>
+        <p>Proxies can go into downtime</p>
+      </div>
+    </aside>
+
+    <!-- Center Column -->
+    <main class="main">
+      <div class="panel title-panel">
+        <h1>λambda</h1>
+        <p class="subtitle">Proxy Depository</p>
+      </div>
+
+      <div class="panel links">
+        <p>Below this text are two buttons. One of them kills a corrupt politican, but the other one gives you a grilled cheese sandwich. Tough choice, I know. This page does not show up while being viewed on Blocksi*, dw.</p>
+        <p>The first link under this text will pop up a new about:blank page on your current chrome window as a new tab. About:blank pages are chrome system pages so they won't appear while a teacher is on Blocksi*. </p>
+        <p>The second link will open up an experimental test build of the λ Terminal, a proxy and web restriction circumnavigation-oriented terminal. It has no everlasting effects, will not linger in search history trace and cannot be seen through Blocksi*.</p>
+        <p>*: By cannot be seen through Blocksi, when a teacher is viewing student screens on Blocksi, for your screen, it will say "On Chrome System Page". Which is the same thing that happens if a student if on a new tab anyway.</p>
+        <button class="link-btn" onclick="injectAboutBlank('https://snoopthethird.oops.wtf/'); return false;">Rammerhead a:b Appended</button>
+        <button class="link-btn" onclick="openTerminal()">λ Terminal Build 0.0</button>
+      </div>
+    </main>
+
+    <!-- Right Column -->
+    <aside class="sidebar">
+      <div class="panel">
+        <h2 style="padding-bottom: 3px;">Popout Proxies</h2>
+        <hr>
+        <p style="padding-bottom: 3px;">Popout proxies will not be seen through Blocksi* either, but they instead pop out into a separate window</p>
+        <hr>
+        <br>
+        <div class="neighbor-boxes">
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://snoopthethird.oops.wtf/', true); return false;">Rammerhead</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://civilizationmars.org/', true); return false;">H.U Proxy 1</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://courtesytell.life/', true); return false;">H.U Proxy 2</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://emphasisgravity.org/', true); return false;">H.U Proxy 3</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://agriculturedraft.org/', true); return false;">H.U Proxy 4</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://hobbyoutput.org/', true); return false;">H.U Proxy 5</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://finishthought.xyz/', true); return false;">H.U Proxy 6</a>
+          <a href="#" class="neighbor-box" onclick="injectPopupWindow('https://letmeoutletmeout.xyz/', true); return false;">H.U Proxy 7</a>
+        </div>
+      </div>
+    <img src="https://preview.redd.it/hy7hqn14qcry.jpg?auto=webp&s=11e523e996e5c57a8eb3fd518fb4a911fe5886c5" class="panel manga-img" height="250" width="300">
+    </aside>
+
+  </div>
+<script>
+  // --------------------------
+  // Live Clock
+  // --------------------------
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // --------------------------
+  // Simple Calendar
+  // --------------------------
+  function buildCalendar() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let calendar = "<table><tr>";
+    const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    days.forEach(d => calendar += `<th>${d}</th>`);
+    calendar += "</tr><tr>";
+
+    for (let i = 0; i < firstDay; i++) calendar += "<td></td>";
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      if ((day + firstDay - 1) % 7 === 0) calendar += "</tr><tr>";
+      const isToday = day === today.getDate();
+      calendar += `<td style="${isToday ? "font-weight:bold; text-decoration:underline;" : ""}">${day}</td>`;
+    }
+
+    calendar += "</tr></table>";
+    document.getElementById("calendar").innerHTML = calendar;
+  }
+  buildCalendar();
+
+  // --------------------------
+  // Open λ Terminal in new tab
+  // --------------------------
+  function openTerminal() {
+    const newTab = window.open("about:blank", "_blank", "popup,width=800,height=600");
+    if (!newTab) return alert("Popup blocked.");
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://raw.githubusercontent.com/x64bitMango/mira/refs/heads/main/proxy/terminal.html", true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        newTab.document.open();
+        newTab.document.write(xhr.responseText);
+        newTab.document.close();
+      } else {
+        alert("Request failed: " + xhr.status);
+      }
+    };
+    xhr.send();
+  }
+
+  // --------------------------
+  // Inject an about:blank with iframe
+  // --------------------------
+  function injectAboutBlank(url = null) {
+    const newTab = window.open("about:blank", "_blank");
+    if (!newTab) return alert("Popup blocked.");
+
+    // Add text node
+    const welcomeText = newTab.document.createTextNode("Welcome, chump");
+    newTab.document.write(welcomeText);
+
+    // Add iframe
+    if (url) {
+      const iframe = newTab.document.createElement("iframe");
+      iframe.src = url;
+      iframe.style.position = "absolute";
+      iframe.style.top = "0";
+      iframe.style.left = "0";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      newTab.document.body.appendChild(iframe);
+    }
+
+    newTab.document.title = "Desmos | Graphing Calculator";
+  }
+
+  // --------------------------
+  // Inject popup window
+  // --------------------------
+  function injectPopupWindow(url = null, HU = false) {
+    const newTab = window.open("about:blank", "_blank", "popup");
+    if (!newTab) return alert("Popup blocked.");
+
+    if (HU && url) {
+      // Directly navigate
+      newTab.location.href = url;
+    } else if (url) {
+      // Add welcome text
+      const welcomeText = newTab.document.createTextNode("Welcome, chump");
+      newTab.document.body.appendChild(welcomeText);
+
+      // Add iframe
+      const iframe = newTab.document.createElement("iframe");
+      iframe.src = url;
+      iframe.style.position = "absolute";
+      iframe.style.top = "0";
+      iframe.style.left = "0";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      newTab.document.body.appendChild(iframe);
+    }
+
+    newTab.document.title = "Desmos | Graphing Calculator";
+  }
+</script>
+</body>
+</html>
