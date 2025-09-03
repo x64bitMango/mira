@@ -130,6 +130,8 @@ function printOutput(text) {
 }
 
 // Command Handler
+let memoryBuffer = null;
+
 function runCommand(input) {
   const parts = input.split(" ");
   const command = parts[0].toLowerCase();
@@ -142,6 +144,7 @@ function runCommand(input) {
         "<span class='green'>proxy</span><br>" +
         "<span class='green'>log </span>&lt;text&gt;<br>" +
         "<span class='green'>location </span>&lt;URL&gt;<br>" +
+        "<span class='green'>allocatemem </span>&lt;KB&gt;<br>" +
         "<span class='green'>cls</span><br>" +
         "<span class='green'>echo </span>&lt;text&gt;<br>" +
         "<span class='green'>eval </span>&lt;js&gt;<br>" +
@@ -238,7 +241,26 @@ function runCommand(input) {
       }
       break;
 
+    case "allocatemem":
+      if (!args) {
+        printOutput("Current allocated memory: " + (memoryBuffer ? memoryBuffer.length / 1024 + " KB" : "0 KB"));
+        break;
+      }
 
+      const kb = parseInt(args);
+      if (isNaN(kb) || kb <= 0) {
+        printOutput("Invalid value. Usage: allocatemem <kb>");
+        break;
+      }
+
+      try {
+        // Allocate new Uint8Array buffer in KB
+        memoryBuffer = new Uint8Array(kb * 1024);
+        printOutput("Allocated " + kb + " KB of memory.");
+      } catch (err) {
+        printOutput("Failed to allocate memory: " + err.message);
+      }
+      break;
 
     case "proxy":
       if (!args) {
@@ -309,7 +331,7 @@ passwordInput.addEventListener("keydown", function(e) {
       setTimeout(() => proxy(), 1000);
     } else {
       printOutput("[<span class='red'>ACCESS DENIED</span>]");
-      setTimeout(() => location.reload(), 1000);
+      setTimeout(() => null, 1000);
     }
     passwordInput.value = "";
     terminal.scrollTop = terminal.scrollHeight;
