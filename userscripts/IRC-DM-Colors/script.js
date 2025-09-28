@@ -4,6 +4,7 @@
 // @version      0.6
 // @description  Color usernames dynamically in DMs and group DMs with traditional IRC-like colors, with a function to refresh the colors
 // @author       x64BitMango
+// @icon         https://raw.githubusercontent.com/x64bitMango/mira/refs/heads/main/userscripts/IRC-DM-Colors/icon.png
 // @match        https://discord.com/*
 // @grant        none
 // ==/UserScript==
