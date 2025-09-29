@@ -1,9 +1,11 @@
+
 // ==UserScript==
 // @name         V-IRC Discord DMs
 // @namespace    http://tampermonkey.net/
 // @version      0.6
 // @description  Color usernames dynamically in DMs and group DMs with vibrant IRC-like colors, with a function to refresh the colors
 // @author       x64BitMango
+// @namespace    https://github.com/x64bitMango/mira/tree/main/userscripts/IRC-DM-Colors
 // @icon         https://raw.githubusercontent.com/x64bitMango/mira/refs/heads/main/userscripts/IRC-DM-Colors/icon.png
 // @match        https://discord.com/*
 // @include      https://*.discord.com/*
