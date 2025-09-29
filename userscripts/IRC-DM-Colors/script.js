@@ -6,6 +6,8 @@
 // @author       x64BitMango
 // @icon         https://raw.githubusercontent.com/x64bitMango/mira/refs/heads/main/userscripts/IRC-DM-Colors/icon.png
 // @match        https://discord.com/*
+// @include      https://*.discord.com/*
+// @run-at       document-idle
 // @grant        none
 // ==/UserScript==
 
