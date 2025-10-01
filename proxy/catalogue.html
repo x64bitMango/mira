@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desmos | Graphing Calculator</title>
+  <link rel="icon" type="image/x-icon" href="https://www.desmos.com/assets/img/apps/graphing/favicon.ico">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      background: url("https://hdwallpaperim.com/wp-content/uploads/2017/09/16/51250-monochrome-manga-stars-748x537.jpg") no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Dim overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 15, 0.48);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(20, 20, 25, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem 2.5rem;
+      width: 96%;
+      max-width: 1600px;
+      min-height: 92vh;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      text-align: center;
+    }
+
+    p.description {
+      font-size: 1rem;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .game-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .game-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: #fff;
+      transition: background 0.2s;
+    }
+
+    .game-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .game-title {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .star-btn {
+      font-size: 1.1rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .starred {
+      color: gold;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Catalogue:// </h1>
+    <p class="description"> - An expanded catalogue of games that we like - <br><small>Created 9.30.25 - Supplied by <b>λambda</b> <br> We cannot guaruntee maintenance for an experimental side-project</small></p>
+    <div id="gameList" class="game-list"></div>
+  </div>
+
+  <script>
+    // --------------------------
+    // about:blank injector
+    // --------------------------
+    function injectAboutBlank(url = null, favicon = "https://www.desmos.com/assets/img/apps/graphing/favicon.ico") {
+      const newTab = window.open("about:blank", "_blank");
+      if (!newTab) return alert("Popup blocked.");
+
+      if (!newTab.document.head) {
+        newTab.document.write("<head></head><body></body>");
+        newTab.document.close();
+      }
+
+      const welcomeText = newTab.document.createTextNode("Welcome, chump");
+      newTab.document.body.appendChild(welcomeText);
+
+      if (favicon) {
+        const link = newTab.document.createElement("link");
+        link.rel = "icon";
+        link.href = favicon;
+        newTab.document.head.appendChild(link);
+      }
+
+      if (url) {
+        const iframe = newTab.document.createElement("iframe");
+        iframe.src = url;
+        iframe.style.position = "absolute";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        newTab.document.body.appendChild(iframe);
+      }
+
+      newTab.document.title = "Desmos | Graphing Calculator";
+    }
+
+    // --------------------------
+    // Games array
+    // --------------------------
+const games = [
+  { name: "Bad Time Simulator", url: "https://script.google.com/macros/s/AKfycbyDlu_jOseVJ1vs-727rRdeIgvVzKkUFT9FwBsdsaLmMKt46TmNtM_jYrDJYvPQb0Y_Lw/exec" },
+  { name: "BitLife", url: "https://arcadehubgaming.github.io/cdn/bitlife/index.html" },
+  { name: "Eaglercraft (Minecraft Javascript Runtime 1.12.2 ALPHA)", url: "https://arcadehubgaming.github.io/cdn18/eaglercraft-1.12.2-wasm/" },
+  { name: "Flappy Chairman", url: "https://rightonaether.github.io/Flappy-Chairman/" },
+  { name: "Friday Night Funkin'", url: "https://arcadehubgaming.github.io/cdn2/fridaynightfunkin/index.html" },
+  { name: "Friday Night Funkin' (Miku)", url: "https://arcadehubgaming.github.io/cdn8/Miku" },
+  { name: "Friday Night Funkin' (Michael Jackson's Smooth Criminal over 'Roses')", url: "https://arcadehubgaming.github.io/cdn8/rosecriminal" },
+  { name: "Friday Night Funkin' (Star Catcher)", url: "https://arcadehubgaming.github.io/cdn8/starcatcher" },
+  { name: "Friday Night Funkin' (Salty's Sunday Night)", url: "https://arcadehubgaming.github.io/cdn8/saltyssundaynight" },
+  { name: "Friday Night Funkin' (vs. Hex)", url: "https://arcadehubgaming.github.io/cdn8/hex" },
+  { name: "Friday Night Funkin' (X event)", url: "https://arcadehubgaming.github.io/cdn14/papaswingeria/" },
+  { name: "Friday Night Funkin' (ann)", url: "https://arcadehubgaming.github.io/cdn8/ann" },
+  { name: "Happy Wheels", url: "https://arcadehubgaming.github.io/cdn2/happywheels/index.html" },
+  { name: "OSU!", url: "https://arcadehubgaming.github.io/cdn5/cdn5/osu!/index.html" },
+  { name: "Papa's Burgeria", url: "https://arcadehubgaming.github.io/cdn5/cdn5/papasburgeria/index.html" },
+  { name: "Papa's Freezeria", url: "https://arcadehubgaming.github.io/cdn5/cdn5/papaspizzaria/index.html" },
+  { name: "Papa's Scooperia", url: "https://arcadehubgaming.github.io/cdn3/cdn3/scooperia/index.html" },
+  { name: "Papa's Wingeria", url: "https://arcadehubgaming.github.io/cdn14/papaswingeria/" },
+  { name: "Pokémon Emerald", url: "https://script.google.com/macros/s/AKfycbydeGJlDAWwZCE5PY08zOOmx37ItizsHHLSxDEwAEOsGgT7n9rqb4V1Anelns4sezU6/exec" },
+  { name: "Pokémon Fire Red", url: "https://script.google.com/macros/s/AKfycbzEbzXxS4zazELSeJtXyLaPrJhPMEJsh2lACeG_0Ky7xTL0ewG0m1iJeU2d1K0OmeGOug/exec" },
+  { name: "Pokémon Leaf Green", url: "https://script.google.com/macros/s/AKfycbxWYXzXN3TRwxELxgrTkjmE5hyqPMgzdNn6clWSzVcU-m0m9MDdHHb-VP-VDnz06vNe/exec" },
+  { name: "Pokémon Ruby", url: "https://script.google.com/macros/s/AKfycbypOitjGD19RPkCYQ8vgJzFfmtMtnl3naBwSw9OhpqtalZs0k3Pri3nL7X76qUwdV9GGQ/exec" },
+  { name: "Pokémon Sapphire", url: "https://script.google.com/macros/s/AKfycbyeS8uFFwRdwOSD8Nx9TgRvHjajV_wF-Hhcb1yylBWSderXu0DEwCWC639oGWZThrjP/exec" },
+  { name: "Stick War", url: "https://arcadehubgaming.github.io/cdn4/cdn4/stickwar/index.html" },
+  { name: "Subway Surfers", url: "https://arcadehubgaming.github.io/cdn4/cdn4/subway-surfers/index.html" },
+  { name: "Swords and Souls (PERSONAL FAVORITE)", url: "https://script.google.com/macros/s/AKfycbwpk3_eQ-NLDyEjcqWn-txMpuRmeF2pgck1awpz9tkMNL79tQ_hYiqC3hKdWhXXXK1f1g/exec" },
+  { name: "Tank Trouble 2 (A Personal Favorite)", url: "https://arcadehubgaming.github.io/cdn4/cdn4/tank-trouble-2/index.html" },
+  { name: "The Binding of Isaac", url: "https://arcadehubgaming.github.io/cdn7/bindings of issac/" },
+];
+
+
+    // --------------------------
+    // Favorites handling
+    // --------------------------
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    function renderGames() {
+      const gameList = document.getElementById("gameList");
+      gameList.innerHTML = "";
+
+      // Sort: favorites on top
+      const sortedGames = [...games].sort((a, b) => {
+        const aFav = favorites.includes(a.url);
+        const bFav = favorites.includes(b.url);
+        return aFav === bFav ? 0 : aFav ? -1 : 1;
+      });
+
+      sortedGames.forEach(game => {
+        const item = document.createElement("div");
+        item.className = "game-item";
+
+        const title = document.createElement("span");
+        title.className = "game-title";
+        title.textContent = game.name;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const playBtn = document.createElement("button");
+        playBtn.className = "btn";
+        playBtn.textContent = "Play";
+        playBtn.onclick = () => injectAboutBlank(game.url);
+
+        const starBtn = document.createElement("button");
+        starBtn.className = "btn star-btn";
+        starBtn.innerHTML = favorites.includes(game.url) ? "★" : "☆";
+        if (favorites.includes(game.url)) starBtn.classList.add("starred");
+
+        starBtn.onclick = () => toggleFavorite(game.url);
+
+        actions.appendChild(playBtn);
+        actions.appendChild(starBtn);
+
+        item.appendChild(title);
+        item.appendChild(actions);
+        gameList.appendChild(item);
+      });
+    }
+
+    function toggleFavorite(url) {
+      if (favorites.includes(url)) {
+        favorites = favorites.filter(f => f !== url);
+      } else {
+        favorites.push(url);
+      }
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      renderGames();
+    }
+
+    renderGames();
+  </script>
+</body>
+</html>
